@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { AuthAPI, type User } from "./api";
 
 type AuthContextType = {
@@ -81,13 +82,11 @@ export function useAuth() {
 
 export function RequireManager({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
-  const router = (
-    typeof window !== "undefined" ? require("next/navigation") : null
-  )?.useRouter?.();
+  const router = useRouter();
   const isManager = user?.role === "MANAGER" || user?.role === "ADMIN";
 
   React.useEffect(() => {
-    if (!loading && !isManager) router?.replace?.("/worker/clock");
+    if (!loading && !isManager) router.replace("/worker/clock");
   }, [loading, isManager, router]);
 
   if (loading) return null;
